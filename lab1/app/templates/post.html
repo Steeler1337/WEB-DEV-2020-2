@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Заголовок поста</h1>
+    <div class="info">
+        {{ post.author }}, {{ post .date.strftime('%d.%m.%Y')}}
+    </div>
+    <div>
+        <img class='picture mt-3 mb-5' src="{{ url_for('static', filename='images/' ~ post.image_filename) }}" alt="Card image cap" width='700px'>
+    </div>
+    <div class="text-justify d-flex align-items-center">
+        <p>
+            {{ post.text }}
+        </p>
+    </div>
+    <div class="comment mb-4" >
+      <form name='comment' method='post' >
+        <p class='comment-sentence p-3'>
+          Оставьте комментарий
+        </p>
+        <div class='p-3'>
+          <textarea class='area-sector'>
+          </textarea>
+        </div>
+        <p class='ml-3'>
+          <button type="submit" class="btn btn-primary">Отправить</button>
+        </p>
+      </form>
+    </div>
+    <div class="media">
+      <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
+      <div class="media-body">
+        <h5 class="mt-0">Stephanie Franklin</h5>
+        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+        <div class="media mt-3">
+          <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
+          <div class="media-body">
+            <h5 class="mt-0">Andrew Mcconell</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<footer class='border-top mt-3 downground'>
+  <div class="container mb-3">
+      <div class="row">
+          <div class="col-lg-8 offset-lg-2 text-center mt-4"> <!--отступ 2, 8 текст, 2 отступ-->
+              <p>
+                Гладышев Федор Павлович
+              </p>
+              <p>191-351</p>
+          </div>
+      </div>
+  </div>
+</footer>
+{% endblock %}

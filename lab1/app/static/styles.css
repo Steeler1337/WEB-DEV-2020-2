@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 20px;
+}
+.avatar {
+    max-width: 100%;
+}
+
+.comment {
+    border: 1px solid rgb(226, 226, 226);
+}
+
+.picture {
+    margin:auto; 
+    display:block
+}
+
+.comment-sentence {
+    border-bottom: 1px solid rgb(219, 219, 219); 
+    background-color: rgba(224, 224, 224, 0.253);
+    font-size: 25px;
+}
+
+.area-sector {
+    border:1px solid rgb(206, 206, 206); 
+    width:100%;
+}
+
+.downground {
+    font-size: 25px;
+}
