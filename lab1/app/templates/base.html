@@ -17,31 +17,55 @@
             </title>
         </head>
         <body>
-            <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url_for('index') }}">Лабораторная работа № 1</a>
-                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-                        aria-expanded="false" aria-label="Toggle navigation"></button>
-                    <div class="collapse navbar-collapse" id="collapsibleNavId">
-                        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{ url_for('posts') }}">Посты</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('about') }}">Об авторе</a>
-                            </li>
-                        </ul>
+            <div class="wrapper">
+                <div class="content">
+                    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+                        <div class="container">
+                            <a class="navbar-brand" href="{{ url_for('index') }}">Лабораторная работа № 1</a>
+                            <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+                                aria-expanded="false" aria-label="Toggle navigation"></button>
+                            <div class="collapse navbar-collapse" id="collapsibleNavId">
+                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="{{ url_for('posts') }}">Посты</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url_for('about') }}">Об авторе</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="container mt-5">
+                        {% block content %}
+                            <h1>Содержимое по умолчанию</h1>
+                        {% endblock %}
                     </div>
+
                 </div>
-            </nav>
 
-            <div class="container mt-5">
-                {% block content %}
-                    <h1>Содержимое по умолчанию</h1>
-                {% endblock %}
+
+
+
+
+                <footer class='downground border-top mt-3'>
+                    <div class="container mb-3">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2 text-center mt-4"> <!--отступ 2, 8 текст, 2 отступ-->
+                                <p>
+                                Гладышев Федор Павлович
+                                </p>
+                                <p>191-351</p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+
             </div>
+                
 
-
+            
             <!-- Optional JavaScript; choose one of the two! -->
 
             <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->

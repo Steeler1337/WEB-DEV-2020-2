@@ -28,31 +28,23 @@
         </p>
       </form>
     </div>
-    <div class="media">
-      <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
-      <div class="media-body">
-        <h5 class="mt-0">Stephanie Franklin</h5>
-        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-        <div class="media mt-3">
-          <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
-          <div class="media-body">
-            <h5 class="mt-0">Andrew Mcconell</h5>
-            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-          </div>
+    {% for comment in post.comments %}
+      <div class="media mt-5">
+        <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
+        <div class="media-body">
+          <h5 class="mt-0">{{ comment.author }}</h5>
+          {{ comment.text }}
+          {% for replie in comment.replies %}
+            <div class="media mt-3">
+              <img class='mr-3' src="{{ url_for('static', filename='images/round.png') }}" alt='' width='80px'>
+              <div class="media-body">
+                <h5 class="mt-0">{{ replie.author }}</h5>
+                {{ replie.text }}
+              </div>
+            </div>
+          {% endfor %}
         </div>
       </div>
-    </div>
+    {% endfor %}
 </div>
-<footer class='border-top mt-3 downground'>
-  <div class="container mb-3">
-      <div class="row">
-          <div class="col-lg-8 offset-lg-2 text-center mt-4"> <!--отступ 2, 8 текст, 2 отступ-->
-              <p>
-                Гладышев Федор Павлович
-              </p>
-              <p>191-351</p>
-          </div>
-      </div>
-  </div>
-</footer>
 {% endblock %}

@@ -1,10 +1,17 @@
 * {
-    box-sizing: border-box;
+    margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
 }
 
 body {
     font-size: 20px;
+    height: 100%;
 }
+
 .avatar {
     max-width: 100%;
 }
@@ -31,4 +38,18 @@ body {
 
 .downground {
     font-size: 25px;
+}
+
+.wrapper {
+    display: flex;
+	flex-direction: column-reverse;
+	min-height: 100%;
+}
+
+footer {
+	flex: 0 0 auto;
+}
+
+.content {
+    flex: 1 0 auto;
 }

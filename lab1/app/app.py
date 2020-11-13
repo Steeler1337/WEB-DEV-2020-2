@@ -19,6 +19,7 @@ def generate_comments(replies=True):
         comment = {'author' : fake.name(), 'text' : fake.text()}
         if replies:
             comment['replies'] = generate_comments(replies=False)
+        comments.append(comment)
     return comments
 
 def generate_post(i):
@@ -46,6 +47,7 @@ def posts():
 def post(index):
     p=posts_list[index]
     return render_template('post.html', title=p['title'], post=p)
+
 
 
 @app.route('/about')
