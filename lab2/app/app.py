@@ -66,16 +66,16 @@ def phone():
             phone = phone.replace(')', '')
             phone = phone.replace('-', '')
             phone = phone.replace('.', '')
+            denied_signs = 'abcdefghijklmnopqrstuvwxyz'
             if phone.startswith('+7'):
                 phone = phone.replace('+7', '8')
                 if len(phone) == 11:
                     for symbol in phone:
-                        if not symbol.isdigit():
-                            error_msg = error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
+                        if symbol in denied_signs:
+                            error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
                             return render_template('phone.html', error_msg=error_msg)
-                        else:
-                            result = phone[0] + '-' + phone[1] + phone[2] + phone[3] + '-' + phone[4] + phone[5] + phone[6] + '-' + phone[7] + phone[8] + '-' + phone[9] + phone[10]
-                            return render_template('phone.html', result=result)
+                    result = phone[0] + '-' + phone[1] + phone[2] + phone[3] + '-' + phone[4] + phone[5] + phone[6] + '-' + phone[7] + phone[8] + '-' + phone[9] + phone[10]
+                    return render_template('phone.html', result=result)
 
                 else:
                     error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. Неверное количество цифр." + "</div>"
@@ -84,12 +84,11 @@ def phone():
             elif phone.startswith('8'):
                 if len(phone) == 11:
                     for symbol in phone:
-                        if not symbol.isdigit():
-                            error_msg = error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
+                        if symbol in denied_signs:
+                            error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
                             return render_template('phone.html', error_msg=error_msg)
-                        else:
-                            result = phone[0] + '-' + phone[1] + phone[2] + phone[3] + '-' + phone[4] + phone[5] + phone[6] + '-' + phone[7] + phone[8] + '-' + phone[9] + phone[10]
-                            return render_template('phone.html', result=result)
+                    result = phone[0] + '-' + phone[1] + phone[2] + phone[3] + '-' + phone[4] + phone[5] + phone[6] + '-' + phone[7] + phone[8] + '-' + phone[9] + phone[10]
+                    return render_template('phone.html', result=result)
 
                 else:
                     error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. Неверное количество цифр." + "</div>"
@@ -98,12 +97,11 @@ def phone():
             else:
                 if len(phone) == 10:
                     for symbol in phone:
-                        if not symbol.isdigit():
-                            error_msg = error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
+                        if symbol in denied_signs:
+                            error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. В номере телефона встречаются недопустимые символы." + "</div>"
                             return render_template('phone.html', error_msg=error_msg)
-                        else:
-                            result = '8' + '-' + phone[0] + phone[1] + phone[2] + '-' + phone[3] + phone[4] + phone[5] + '-' + phone[6] + phone[7] + '-' + phone[8] + phone[9]
-                            return render_template('phone.html', result=result)
+                    result = phone[0] +  phone[1] + phone[2] + '-' + phone[3] +  phone[4] +  phone[5] + '-' + phone[6] +  phone[7] + '-' + phone[8] +  phone[9]
+                    return render_template('phone.html', result=result)
                 else:
                     error_msg = "<div class='invalid-feedback'>" + "Недопустимый ввод. Неверное количество цифр." + "</div>"
                     return render_template('phone.html', error_msg=error_msg)
