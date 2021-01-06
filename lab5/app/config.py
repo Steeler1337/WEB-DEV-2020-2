@@ -1,0 +1,5 @@
+SECRET_KEY = b'J\x10b\xa1\xe7X\xdf\xd1S\x9c\x82\xf3\xa7J\xed\xac'
+MYSQL_USER = 'std_1225'
+MYSQL_HOST = 'std-mysql.ist.mospolytech.ru'
+MYSQL_DATABASE = 'std_1225'
+MYSQL_PASSWORD = 'G28F03P01'
