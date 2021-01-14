@@ -11,11 +11,11 @@ class MySQL:
         if 'db' not in g:
             g.db = self.connect()
         return g.db 
-  
+
     def connect(self):
         return connector.connect(**self.config)
 
-    @property # позволяющий использовать метод как свойство/атрибут через точку без скобок
+    @property # декоратор, позволяющий использовать метод как свойство/атрибут через точку без скобок
     def config(self):
         return {
             'user': self.app.config['MYSQL_USER'], # self.app - берём данные из конфигурации приложения, которые запомнили в ините
