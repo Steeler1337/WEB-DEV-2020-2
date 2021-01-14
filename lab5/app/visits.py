@@ -1,29 +1,27 @@
 import io
 import math
 import datetime
-from functools import wraps
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask import Flask,Blueprint, render_template, request, redirect, url_for, flash, send_file
+from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
 from app import mysql
-
 
 PER_PAGE = 5
 
 bp = Blueprint('visits', __name__, url_prefix='/visits')
 
 def convert_to_csv(records):
-    fields = records[0]._fields # Определяем поля записей, которые будут заголовками в таблице. Атрибут _fields создаётся mysql-connector-python в результате запроса.
-    result = 'No,' + ','.join(fields) + '\n' 
-    for i, record in enumerate(records): # enumerate возвращает итератор, который возвращает пары: индекс и запись
-        result += f'{i+1},' + ','.join([str(getattr(record, f, '')) for f in fields]) + '\n'
+    fields = records[0]._fields
+    result = 'No,' + ','.join(fields) + '\n'
+    for i,record in enumerate(records):
+        result +=f'{i + 1},' + ','.join([str(getattr(record, f, '')) for f in fields]) + '\n'
     return result
 
 def generate_report(records):
-    buffer = io.BytesIO() # буфер для того, чтобы не сохранять данные на диск
-    buffer.write(convert_to_csv(records).encode()) # в буфер будут записана строка в формате csv, которую сделать ф-ия convert_to_csv(). encode, т.к. строка бинарная и преобразуем в байтовое представление
-    buffer.seek(0) # чтобы вернуться к началу после прочтения файла
+    buffer = io.BytesIO()
+    buffer.write(convert_to_csv(records).encode())
+    buffer.seek(0)
     return buffer
-
+    
 
 @bp.route('/logs')
 def logs():
@@ -31,52 +29,54 @@ def logs():
     with mysql.connection.cursor(named_tuple=True) as cursor:
         cursor.execute('SELECT count(*) AS count FROM visit_logs;')
         total_count = cursor.fetchone().count
-    total_pages = math.ceil(total_count/PER_PAGE) # ceil - округление в большую сторону
+    total_pages= math.ceil(total_count/PER_PAGE)
     pagination_info = {
         'current_page': page,
         'total_pages': total_pages,
         'per_page': PER_PAGE
     }
     query = '''
-        SELECT visit_logs.*, users2.first_name, users2.last_name, users2.middle_name
-        FROM users2 RIGHT OUTER JOIN visit_logs ON users2.id = visit_logs.user_id
+        SELECT visit_logs.*, users.first_name, users.last_name, users.middle_name
+        FROM users right outer join visit_logs on users.id = visit_logs.user_id
         ORDER BY visit_logs.created_at DESC
-        LIMIT %s OFFSET %s; 
-    ''' # RIGHT OUTER JOIN чтобы смотреть не только залогиненных пользователей.
-        # LIMIT %s OFFSET %s; чтобы пропустить некоторой кол-во записей сначала
-    cursor = mysql.connection.cursor(named_tuple=True) # cursor - специальный метод, который есть у объекта подключения для совершения sql-запросов с помощью метода execute
+        LIMIT %s OFFSET %s;
+    '''
+    cursor =  mysql.connection.cursor(named_tuple=True)
     cursor.execute(query, (PER_PAGE, PER_PAGE*(page-1)))
     records = cursor.fetchall()
     cursor.close()
-    return render_template('visits/logs.html', records=records)
+    return render_template('visits/logs.html', records=records, pagination_info=pagination_info)
 
 @bp.route('/stat/users')
 def users_stat():
-    query  = '''
-        SELECT users2.id, users2.last_name, users2.first_name, users2.middle_name, count(*) AS count
-        FROM users2 RIGHT OUTER JOIN visit_logs ON users2.id = visit_logs.user_id
-        GROUP BY users2.id
+    query= '''
+        SELECT users.id, users.last_name, users.first_name, users.middle_name, count(*) AS count
+        FROM users RIGHT OUTER JOIN visit_logs on users.id = visit_logs.user_id
+        GROUP BY users.id
         ORDER BY count DESC;
     '''
-    cursor = mysql.connection.cursor(named_tuple=True) # cursor - специальный метод, который есть у объекта подключения для совершения sql-запросов с помощью метода execute
+
+    cursor =  mysql.connection.cursor(named_tuple=True)
     cursor.execute(query)
     records = cursor.fetchall()
     cursor.close()
-    if request.args.get('download_csv'): # если в запросе был передан аргумент 'download_csv', то...
+    if request.args.get('download_csv'):
         f = generate_report(records)
         filename = datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S') + '_users_stat.csv'
         return send_file(f, as_attachment=True, attachment_filename=filename, mimetype='text/csv')
     return render_template('visits/users.html', records=records)
 
+
+
 @bp.route('/stat/pages')
 def pages_stat():
-    query  = '''
-        SELECT path, count(*) AS count
+    query= '''
+        SELECT path, count(*) as count
         FROM visit_logs 
         GROUP BY path
         ORDER BY count DESC;
     '''
-    cursor = mysql.connection.cursor(named_tuple=True) # cursor - специальный метод, который есть у объекта подключения для совершения sql-запросов с помощью метода execute
+    cursor =  mysql.connection.cursor(named_tuple=True)
     cursor.execute(query)
     records = cursor.fetchall()
     cursor.close()
