@@ -39,13 +39,12 @@
                                     <li class="nav-item">
                                         {% if current_user.is_authenticated %}
                                             <div class="dropdown show">
-                                                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" 
-                                                    aria-haspopup="true" aria-expanded="false">
+                                                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     {{ current_user.login }}
-                                                </a>                
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink"> 
-                                                    <a class="dropdown-item" href="{{ url_for('show', user_id=current_user.id ) }}">Профиль</a>
-                                                    <a class='dropdown-item' href="{{ url_for('auth.logout') }}">Выйти</a>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="{{ url_for('show', user_id = current_user.id) }}">Профиль</a>
+                                                    <a class='dropdown-item' href="{{ url_for('logout') }}">Выйти</a>
                                                 </div>
                                             </div>
                                         {% else %}
