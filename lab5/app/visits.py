@@ -12,16 +12,16 @@ PER_PAGE = 5
 bp = Blueprint('visits', __name__, url_prefix='/visits')
 
 def convert_to_csv(records):
-    fields = records[0]._fields
-    result = 'No,' + ','.join(fields) + '\n'
-    for i, record in enumerate(records):
+    fields = records[0]._fields # Определяем поля записей, которые будут заголовками в таблице. Атрибут _fields создаётся mysql-connector-python в результате запроса.
+    result = 'No,' + ','.join(fields) + '\n' 
+    for i, record in enumerate(records): # enumerate возвращает итератор, который возвращает пары: индекс и запись
         result += f'{i+1},' + ','.join([str(getattr(record, f, '')) for f in fields]) + '\n'
     return result
 
 def generate_report(records):
-    buffer = io.BytesIO()
-    buffer.write(convert_to_csv(records).encode())
-    buffer.seek(0)
+    buffer = io.BytesIO() # буфер для того, чтобы не сохранять данные на диск
+    buffer.write(convert_to_csv(records).encode()) # в буфер будут записана строка в формате csv, которую сделать ф-ия convert_to_csv(). encode, т.к. строка бинарная и преобразуем в байтовое представление
+    buffer.seek(0) # чтобы вернуться к началу после прочтения файла
     return buffer
 
 
@@ -31,7 +31,7 @@ def logs():
     with mysql.connection.cursor(named_tuple=True) as cursor:
         cursor.execute('SELECT count(*) AS count FROM visit_logs;')
         total_count = cursor.fetchone().count
-    total_pages = math.ceil(total_count/PER_PAGE)
+    total_pages = math.ceil(total_count/PER_PAGE) # ceil - округление в большую сторону
     pagination_info = {
         'current_page': page,
         'total_pages': total_pages,
@@ -41,8 +41,9 @@ def logs():
         SELECT visit_logs.*, users2.first_name, users2.last_name, users2.middle_name
         FROM users2 RIGHT OUTER JOIN visit_logs ON users2.id = visit_logs.user_id
         ORDER BY visit_logs.created_at DESC
-        LIMIT %s OFFSET %s;
+        LIMIT %s OFFSET %s; 
     ''' # RIGHT OUTER JOIN чтобы смотреть не только залогиненных пользователей.
+        # LIMIT %s OFFSET %s; чтобы пропустить некоторой кол-во записей сначала
     cursor = mysql.connection.cursor(named_tuple=True) # cursor - специальный метод, который есть у объекта подключения для совершения sql-запросов с помощью метода execute
     cursor.execute(query, (PER_PAGE, PER_PAGE*(page-1)))
     records = cursor.fetchall()
@@ -61,7 +62,7 @@ def users_stat():
     cursor.execute(query)
     records = cursor.fetchall()
     cursor.close()
-    if request.args.get('download_csv'):
+    if request.args.get('download_csv'): # если в запросе был передан аргумент 'download_csv', то...
         f = generate_report(records)
         filename = datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S') + '_users_stat.csv'
         return send_file(f, as_attachment=True, attachment_filename=filename, mimetype='text/csv')

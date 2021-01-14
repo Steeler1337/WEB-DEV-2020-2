@@ -30,11 +30,11 @@ def load_record(user_id):
     return record
 
 
-def check_rights(action):
-    def decorator(func):
-        @wraps(func) # отсюда возвращается декоратор, который применяется к функции-обёртке "wrapper".
-        def wrapper(*args, **kwargs): # такие аргументы, т.к. мы не знаем заранее сколько их будет и будут ли они позиционными
-            record = load_record(kwargs.get('user_id')) # kawrgs.get('user_id') - получает айди пользователя из словаря  
+def check_rights(action): # check_rights - возвращает декоратор 
+    def decorator(func): # определяем сам декоратор (декоратор, т.к. в качестве аргумента принимает функцию)
+        @wraps(func) # нужно, чтобы сохранились __name__ и __doc__ у обёрнутой функции.
+        def wrapper(*args, **kwargs): # такие аргументы, т.к. мы не знаем заранее сколько их будет и будут ли они позиционными. Это функция обёртка
+            record = load_record(kwargs.get('user_id')) 
             if not current_user.can(action, record=record):
                 flash('У вас недостаточно прав для доступа к данной странице.', 'danger')
                 return redirect(url_for('index'))
@@ -67,7 +67,7 @@ def login():
             cursor.close()
             if db_user:
                 user = User(user_id=db_user.id, login=db_user.login, role_id=db_user.role_id) # если пользователь есть с такими логином и паролем, то создаётся объект класса user.
-                login_user(user, remember=remember_me) # передаём функции фласка "login_user" этот объект. Она запоминает данные пользователя в сессии(кладёт в зашифрованный куки)
+                login_user(user, remember=remember_me) # на любых будущих страницах будет установлена ​​переменная current_user для этого пользователя.передаём функции фласка "login_user" этот объект. Она запоминает данные пользователя в сессии(кладёт в зашифрованный куки).
 
                 flash('Вы успешно аутентифицированы.', 'success') # работает поверх сессии, сообщение сохраняется в сессию. Требует ключ.
 
@@ -83,10 +83,10 @@ def logout():
     return redirect(url_for('index'))
 
 
-def init_login_manager(app): # 
+def init_login_manager(app): 
     login_manager = LoginManager()
     login_manager.init_app(app) # регистрируем логин-менеджер в приложении
     login_manager.login_view = 'auth.login' # указываем эндпоинт для страницы входа, если пользователь захочет пройти без аутентификации
     login_manager.login_message = 'Для доступа к данной странице необходимо пройти процедуру аутентификации.'
     login_manager.login_message_category = 'warning'
-    login_manager.user_loader(load_user) # user_load - callback, инициализирующий объект юзера на основе того, что мы получаем из нашего load_user'a.
+    login_manager.user_loader(load_user) # user_loader - callback, инициализирующий объект юзера на основе того, что мы получаем из нашего load_user'a.

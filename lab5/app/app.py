@@ -20,7 +20,7 @@ init_login_manager(app)
 app.register_blueprint(auth_bp)
 app.register_blueprint(visits_bp)
 
-@app.before_request
+@app.before_request # функция, которая запускается перед каждым запросом
 def save_visit_info():
     user_id = getattr(current_user, 'id', None)
     query = 'INSERT INTO visit_logs (path, user_id) VALUES (%s, %s);'
@@ -50,7 +50,7 @@ def users():
     cursor.close()
     return render_template('users/index.html', users=users) # загружаем всех пользователей и рендерим страничку с ними.
 
-@app.route('/users/<int:user_id>')
+@app.route('/users/<int:user_id>/show')
 @check_rights('show') # выполнится 2-ым
 @login_required # выполнится 1-ым
 def show(user_id):
