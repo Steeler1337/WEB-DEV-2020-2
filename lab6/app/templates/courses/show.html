@@ -110,12 +110,8 @@
                 <div class="col-md-10">
                     <div class="media-body">
                         <div class="row">
-                            <p class="btn-link text-semibold media-heading box-inline">
-                                {% for user in users %}
-                                    {% if user.id == review.user_id %}
-                                        {{ user.full_name }}
-                                    {% endif %}
-                                {% endfor %}
+                            <p class="btn-link text-semibold media-heading box-inline"> 
+                                {{review.user.full_name}}
                             </p>
                             <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg">{{ review.created_at }}</i></p>
                         </div>
