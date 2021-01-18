@@ -23,7 +23,7 @@ def login():
         login = request.form.get('login')
         password = request.form.get('password')
         if login and password:
-            user = User.query.filter(User.login == login).first() # загрузка пользователя, поиск через SQLAlchemy. Либо получим объект класса User, либо None.
+            user = User.query.filter(User.login == login).first()
             if user and user.check_password(password):
                 login_user(user)
                 flash('Вы успешно аутентифицированы.', 'success')

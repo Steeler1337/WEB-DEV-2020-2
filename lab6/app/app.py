@@ -9,8 +9,8 @@ application = app
 
 app.config.from_pyfile('config.py')
 
-naming_convention = { # ключи - различные виды ограничителей, значения - темплейты, которые будут использованы при форматировании
-    'pk': 'pk_%(table_name)s', # также мы не привязываемся к среде БД, несмотря на то, что у них разные диалекты
+naming_convention = {
+    'pk': 'pk_%(table_name)s',
     'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
     'ix': 'ix_%(table_name)s_%(column_0_name)s',
     'uq': 'uq_%(table_name)s_%(column_0_name)s',
@@ -20,7 +20,7 @@ naming_convention = { # ключи - различные виды огранич�
 db = SQLAlchemy(app, metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate(app, db)
 
-from models import Category #, Image, Course
+from models import Image, Category, Course
 
 from courses import bp as courses_bp
 from auth import bp as auth_bp, init_login_manager

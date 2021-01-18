@@ -8,6 +8,16 @@ from sqlalchemy import pool
 
 from alembic import context
 
+
+SKIP_TABLES = ['Computer', 'Computer_series', 'visit_logs', 'CPU', 'Distributor_brand', 'users2', 'Installed_processor', 'Made_computer', 'Maker_brand', 'roles2', 'Series', 'Series_sale']
+
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == 'table' and name in SKIP_TABLES:
+        return False
+    elif type_ == 'index' and name in ['unique_login', 'name']:
+        return False
+    return True
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -32,14 +42,6 @@ target_metadata = current_app.extensions['migrate'].db.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-SKIP_TABLES = ['books', 'Computer', 'Computer_series', 'CPU', 'Distributor_brand', 'Installed_processor', 'ISBN', 'ISBN в книгах', 'Made_computer', 'Maker_brand', 'roles2', 'Series', 'Series_sale', 'users2', 'visit_logs', 'Авторы', 'Авторы книг', 'Библиотечные залы', 'Книги', 'Книги на стеллажах', 'Стеллажи', 'Стеллажи в зале']
-
-def include_object(object, name, type_, reflected, compare_to):
-    if type_ == 'table' and name in SKIP_TABLES:
-        return False
-    elif type_ == 'index' and name in ['unique_login', 'name']:
-        return False
-    return True
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
@@ -55,7 +57,7 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True, include_object=include_object # указали include_object, чтобы Алхимик принял во внимание наш SKIP_TABLES
+        url=url, target_metadata=target_metadata, literal_binds=True, include_object=include_object
     )
 
     with context.begin_transaction():
@@ -91,7 +93,7 @@ def run_migrations_online():
             connection=connection,
             target_metadata=target_metadata,
             process_revision_directives=process_revision_directives,
-            include_object = include_object, # указали include_object, чтобы Алхимик принял во внимание наш SKIP_TABLES
+            include_object=include_object,
             **current_app.extensions['migrate'].configure_args
         )
 

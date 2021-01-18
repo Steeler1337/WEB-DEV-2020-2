@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
 <div class="title-area text-center py-5 d-flex" style="background-image: url({{ course.bg_image.url }});">
     <div class="m-auto">
@@ -60,7 +61,86 @@
             </div>
         {% endif %}
     </section>
+
+    <hr>
+
+    {% if current_user.is_authenticated %}
+        {% if checker == True %}
+            <h4>Спасибо, что оставили комментарий!</h4>
+        {% else %}
+            <form method="POST" action="{{url_for('courses.show', course_id=course.id)}}"> 
+                <div class="form-group">
+                    <label for="rating">Оцените данный курс:</label>
+                    <select class="form-control" data-live-search="true" name="rating" id="rating">
+                        <option value="5" selected >Отлично</option>
+                        <option value="4">Хорошо</option>
+                        <option value="3">Удовлетворительно</option>
+                        <option value="2">Неудовлетворительно</option>
+                        <option value="1">Плохо</option>
+                        <option value="0">Ужасно</option>
+                    </select>
+                </div>
+
+                <input type="text" hidden name="course_id" value="{{ course.id }}">
+                <input type="text" hidden name="user_id" value="{{ current_user.id }}">
+
+                <div class="form-group">
+                    <textarea class="form-control mb-3" name="text" cols="30" rows="5"></textarea>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Оставить отзыв">
+                    </div>
+                </div>
+            
+            </form>
+        {% endif %}
+    {% else %}
+
+    <h3>Войдите в систему, чтобы оставлять комментарии.</h3>
+    {% endif %}
+
+    {% for review in reviews %}
+        <div class="media-block mt-5">
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <div class="profile">
+                        <img width='100' class="rounded-circle cursor-pointer ml-5"
+                        src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="media-body">
+                        <div class="row">
+                            <p class="btn-link text-semibold media-heading box-inline">
+                                {% for user in users %}
+                                    {% if user.id == review.user_id %}
+                                        {{ user.full_name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg">{{ review.created_at }}</i></p>
+                        </div>
+                        <div class="row">
+                            <p class="text-muted text-sm"><b class="fa fa-mobile fa-lg">Оценка: {{ review.rating }}</b></p>
+                        </div>
+                        <p class="review" name="text" >{{ review.text }}</p>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="text-center">
+        <a href="{{url_for('courses.course_reviews', course_id=course.id)}}" type="button" class="btn btn-secondary mt-3">
+            Посмотреть все отзывы о курсе
+        </a>
+    </div>
+
 </div>
+
+
+
+
+
 
 <div id="addThemeModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">

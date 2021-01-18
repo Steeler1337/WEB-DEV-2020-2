@@ -1,15 +1,17 @@
 import os
 import bleach
 from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from tools import Navigator, ImageSaver, CoursesFilter
-from models import Course, Category, Image, Theme, User, Step, Page
+from models import Course, Category, Image, Theme, User, Step, Page, Review
 
 from app import db
 
 bp = Blueprint('courses', __name__, url_prefix='/courses')
 
 PERMITTED_PARAMS = ['name', 'category_id', 'short_desc', 'full_desc', 'author_id']
+#PARAMS_OF_USER = ['id', 'first_name', 'last_name']
+PARAMS_OF_REVIEW = ['rating', 'text', 'course_id', 'user_id']
 
 PER_PAGE = 3
 
@@ -70,10 +72,79 @@ def create():
 
     return redirect(url_for('courses.index'))
 
-@bp.route('/<int:course_id>')
-def show(course_id):
+
+
+
+
+
+
+
+def review_params():
+    return { p: request.form.get(p) for p in PARAMS_OF_REVIEW }
+
+@bp.route('/<int:course_id>', methods=['GET', 'POST'])
+def show(course_id): 
     course = Course.query.get(course_id)
-    return render_template('courses/show.html', course=course)
+    checker = False
+    if request.method == "POST":
+        review = Review(**review_params())
+        db.session.add(review)
+        db.session.commit()
+        course.rating_num = course.rating_num + 1
+        course.rating_sum = course.rating_sum + int(request.form.get('rating'))
+        db.session.add(course)
+        db.session.commit()
+        flash('Ваш отзыв успешно сохранён', 'success')
+        return redirect(url_for("courses.show", course_id=course_id, course=course))
+    reviews = Review.query.filter(Review.course_id == course_id)
+    users = User.query
+    if current_user.is_authenticated:
+        for review in reviews:
+            if review.user_id == current_user.id:
+                checker = True
+    reviews = reviews.order_by(Review.created_at.desc()).limit(5)
+            
+        
+    return render_template('courses/show.html', course=course, reviews=reviews, users=users, checker=checker)
+
+
+@bp.route('/courses/<int:course_id>/reviews')
+def course_reviews(course_id):
+    reviews = Review.query.filter(Review.course_id == course_id)
+
+    sort_params = request.args.get('sort_selector', 1, type=int)
+    if sort_params == 1:
+        reviews = reviews.order_by(Review.created_at.desc())
+    elif sort_params == 2:
+        reviews = reviews.order_by(Review.rating.desc())
+    elif sort_params == 3:
+        reviews = reviews.order_by(Review.rating.asc())
+
+    users = User.query
+    course = Course.query.get(course_id)
+
+    page = request.args.get('page', 1, type=int)
+    pagination = reviews.paginate(page, PER_PAGE)
+    reviews = pagination.items
+    search_parameters = dict()
+    search_parameters['course_id'] = course_id
+    search_parameters['sort_selector'] = sort_params
+
+    
+
+    return render_template('courses/reviews.html', 
+    reviews=reviews, 
+    users=users, 
+    course=course, 
+    pagination=pagination, 
+    search_params=search_parameters, 
+    sort_params=sort_params)
+
+
+
+
+
+
 
 @bp.route('/<int:course_id>/themes/create', methods=['POST'])
 @login_required
@@ -149,3 +220,4 @@ def show_content(course_id, theme_id=None):
         theme=theme, 
         navigator=navigator,
     )
+

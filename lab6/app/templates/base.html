@@ -18,61 +18,65 @@
     <title>Образовательный портал | Московский Политех</title>
 </head>
 
+
 <body class="d-flex flex-column h-100">
-    <header class="fixed-top">
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="container">
-                <div class="logo navbar-brand">
-                    <a href="{{ url_for('index') }}">
-                        <img class="img-fluid" src="{{ url_for('static', filename='images/polytech_logo.png') }}" alt="polytech-logo">
-                    </a>
-                </div>
-                {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <div class="profile" title="{{ current_user.full_name }}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="img-fluid rounded-circle cursor-pointer"
-                                src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
-                        </div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Профиль</a>
-                            <a class="dropdown-item" href="#">Мои курсы</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a>
-                        </div>
+    <div style="display: flex; flex-direction: column; min-height: 100%;">
+        <header class="fixed-top">
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container">
+                    <div class="logo navbar-brand">
+                        <a href="{{ url_for('index') }}">
+                            <img class="img-fluid" src="{{ url_for('static', filename='images/polytech_logo.png') }}" alt="polytech-logo">
+                        </a>
                     </div>
-                {% else %}
-                    <a class="btn btn-lg btn-outline-light" href="{{ url_for('auth.login') }}">Войти</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-
-    <div class="alerts-area fixed-top">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, msg in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show m-0" role="alert">
-                    {{ msg }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    {% if current_user.is_authenticated %}
+                        <div class="dropdown">
+                            <div class="profile" title="{{ current_user.full_name }}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid rounded-circle cursor-pointer"
+                                    src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
+                            </div>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Профиль</a>
+                                <a class="dropdown-item" href="#">Мои курсы</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-lg btn-outline-light" href="{{ url_for('auth.login') }}">Войти</a>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        {% endwith %}
-    </div>
+            </nav>
+        </header>
 
-    <main class="main">
-       {% block content %}
-       {% endblock %}
-    </main>
-
-    <footer class="footer bg-dark text-white d-flex align-items-center mt-auto py-5">
-        <div class="container">
-            <div class="text-center">
-                &copy; Московский политехнический университет
-            </div>
+        <div class="alerts-area fixed-top">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show m-0" role="alert">
+                        {{ msg }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endwith %}
         </div>
-    </footer>
 
+        <div style="flex: 1 0 auto;">
+            <main class="main">
+            {% block content %}
+            {% endblock %}
+            </main>
+        </div>
+
+        <footer class="footer bg-dark text-white d-flex align-items-center mt-5 py-5" style="flex: 0 0 auto;">
+            <div class="container">
+                <div class="text-center">
+                    &copy; Московский политехнический университет
+                </div>
+            </div>
+        </footer>
+    </div>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

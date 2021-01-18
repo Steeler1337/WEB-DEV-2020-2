@@ -18,6 +18,8 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, nullable=False, server_default=sa.sql.func.now())
     role_id = db.Column(db.Integer, db.ForeignKey('roles4.id'))
 
+    reviews = db.relationship('Review', backref='user')
+
     def __repr__(self):
         return '<User %r>' % self.login
 
@@ -41,13 +43,13 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
-class Category(db.Model): # задание таблицы происходит так
+class Category(db.Model):
     __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
 
-    def __repr__(self): # то, как будут выглядеть объекты нашего класса в консоли
+    def __repr__(self):
         return '<Category %r>' % self.name
 
 class Image(db.Model):
@@ -94,6 +96,7 @@ class Course(db.Model):
     bg_image = db.relationship('Image')
     themes = db.relationship('Theme', backref='course')
     author = db.relationship('User')
+    reviews = db.relationship('Review', backref='course')
 
     def __repr__(self):
         return '<Course %r>' % self.name
@@ -136,8 +139,14 @@ class Page(db.Model):
     def html(self):
         return markdown.markdown(self.text)
 
+class Review(db.Model):
+    __tablename__ = 'reviews'
 
-
-
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    text = db.Column(db.Text(), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, server_default=sa.sql.func.now())
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users4.id'))
 
 

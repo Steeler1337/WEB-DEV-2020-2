@@ -1,3 +1,4 @@
+
 .logo {
     max-width: 200px;
 }
@@ -183,6 +184,10 @@
 
 .overflow-hidden {
     overflow: hidden;
+}
+
+.review {
+    font-size: 23px;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% from 'pagination.html' import render_pagination %}
+
+{% block content %}
+<div class="container">
+    
+    
+    <h2 class="pt-5">Отзывы курса "{{ course.name }}"</h2>
+
+    <form>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group">
+                    <div class="my-3">
+                        <select class="form-control selectpicker" data-live-search="true" name="sort_selector" title="Параметр сортировки">
+                            <option value="1" {%if sort_params == 1%}selected{% endif %}>По новизне</option>
+                            <option value="2" {%if sort_params == 2%}selected{% endif %}>Сначала положительные</option>
+                            <option value="3" {%if sort_params == 3%}selected{% endif %}>Сначала отрицательные</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group mt-3">
+                    <input type="submit" class="btn btn-primary" value="Применить">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    
+    
+    {% for review in reviews %}
+       
+        <div class="media-block mt-5">
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <div class="profile">
+                        <img width='100' class="rounded-circle cursor-pointer ml-5"
+                        src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="media-body">
+                        <div class="row">
+                            <p class="btn-link text-semibold media-heading box-inline">
+                                {% for user in users %}
+                                    {% if user.id == review.user_id %}
+                                        {{ user.full_name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg">{{ review.created_at }}</i></p>
+                        </div>
+                        <div class="row">
+                            <p class="text-muted text-sm"><b class="fa fa-mobile fa-lg">Оценка: {{ review.rating }}</b></p>
+                        </div>
+                        <p class="review" name="text" >{{ review.text }}</p>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{{ render_pagination(pagination, request.endpoint, search_params) }}
+
+{% endblock %}
