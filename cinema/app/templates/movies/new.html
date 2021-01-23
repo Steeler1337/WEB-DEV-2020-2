@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% from 'movies/form.html' import add_movie %}
+
+{% block content %}
+    {{ add_movie(url_for('movies.create'), genres) }} 
+{% endblock %}
