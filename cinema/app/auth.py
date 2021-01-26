@@ -8,7 +8,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def init_login_manager(app):
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Для доступа к данной странице необходимо пройти процедуру аутентификации.'
+    login_manager.login_message = 'Страница доступна только для аутентфицированных пользователей.'
     login_manager.login_message_category = 'warning'
     login_manager.user_loader(load_user)
     login_manager.init_app(app)

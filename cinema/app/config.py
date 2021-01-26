@@ -10,3 +10,7 @@ UPLOAD_FOLDER = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
     'media/images'
 )
+
+#join(path1[, path2[, ...]]) - соединяет пути с учётом особенностей операционной системы.
+#dirname(path) - возвращает имя директории пути path
+#.abspath(path) - возвращает нормализованный абсолютный путь.

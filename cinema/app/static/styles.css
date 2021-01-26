@@ -1,3 +1,6 @@
+body {
+    background-color: rgb(185, 185, 185);
+}
 
 .logo {
     max-width: 200px;
@@ -9,6 +12,12 @@
 
 .navbar {
     height: 80px;
+}
+
+.name-logo {
+    font-family: 'Lobster', cursive;
+    color: white;
+    font-size: 150%;
 }
 
 .alerts-area {
@@ -23,6 +32,16 @@
 .title-area {
     background-color: black;
     background-image: url('images/background.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    font-size: 1.5rem;
+    min-height: calc(100vh - 80px);
+}
+
+.login-area {
+    background-image: url('images/cinema.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -188,6 +207,13 @@
 
 .review {
     font-size: 23px;
+}
+
+.movie-name {
+    text-shadow: 2px 0 1px #000,
+    0 1px 1px #000, 
+    -1px 0 1px #000, 
+    0 -1px 1px #000;
 }
 
 @media (max-width: 768px) {

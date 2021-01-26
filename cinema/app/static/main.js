@@ -1,9 +1,17 @@
-$('#addSubThemeModal').on('show.bs.modal', function (event) {
+$('#deleteMovie').on('show.bs.modal', function (event) {
     let form = this.querySelector('form');
-    let themeName = event.relatedTarget.closest('.card-header').querySelector('h5').textContent;
-    form['parent_id'].value = event.relatedTarget.dataset.parentId;
-    document.getElementById('parentThemeName').textContent = themeName;
+    let button_deletion = document.getElementById('delete-btn');
+    movie_id = button_deletion.value;
+    
+    let url = event.relatedTarget.dataset.url;
+    form.action = url;
+    
+    //let movieName = event.relatedTarget.closest('.title').querySelector('p').textContent;
+    //document.getElementById('movie_name').textContent = movieName;
+    alert(form.action);
 });
+
+
 
 function imagePreviewHandler(event) {
     if (event.target.files && event.target.files[0]) {
@@ -81,4 +89,12 @@ window.onload = function() {
             imageUploadFunction: imageUploadFunction
         });
     }
+    // let counter = document.getElementById('add').length;
+    // alert(counter)
+    // document.getElementById('counter').textContent = counter;
+
+    let x = document.getElementsByClassName("add")
+    alert(x.length)
+    document.getElementById("counter").innerHTML = x.length;
 }
+

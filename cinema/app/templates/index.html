@@ -1,27 +1,98 @@
 {% extends 'base.html' %}
-
+{% from 'pagination.html' import render_pagination %}
 {% block content %}
 
 
 <div class="container-fluid">
     <div class="top-courses container-fluid my-5">
-        <h2 class="mb-3 text-center text-uppercase font-weight-bold">Популярные фильмы</h2>
+        <h2 class="mb-4 pt-5 text-center text-uppercase font-weight-bold">Популярные фильмы</h2>
         
         <div class="row no-gutters">
             {% for movie in movies %}
-                <div class="col-lg-4 col-md-6">
-                    <div class="course" style="background-image: url({{ url_for('image', poster_id=movie.poster_id) }});">
-                        <a class="title" href="#">
-                            {{ movie.name }}
-                        </a>
-                        <p>{{ movie.producer }}</p>
-                        <div class="rating">
-                            <span>{{ movie.year }}</span>
-                        </div>                                
+                    <div class="col-md-6 mx-auto">
+                        <div class="row">
+                            <div class="course" style="background-image: url({{ url_for('image', poster_id=movie.poster_id) }});">
+                                <p class="title movie-name">{{ movie.name }}</p>
+                                <p class="movie-name">
+                                    <span>
+                                        {% for movie_genre in movie.movie_genre %}
+                                            {{ movie_genre.genre.name }}
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                                <div class="rating movie-name">
+                                    <span>{{ movie.year }}</span>
+                                </div>
+                                <p class="movie-name">
+                                    
+                                    Количество рецензий: <span id="counter">0</span>
+                                    {% for review in movie.review %}
+                                        {% if movie.id == movie.review.movie_id %}
+                                            <input type="hidden" class="add">
+                                            да 
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                </p>                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="btn-group mt-1 mb-3 mx-auto">
+                                <a class="btn btn-primary" href="{{ url_for('movies.show', movie_id=movie.id )}}">Просмотр</a>
+                                {% if current_user.role_id == 2 or current_user.role_id == 1 %}
+                                    <a class="btn btn-secondary" href="{{ url_for('movies.edit', movie_id=movie.id)}}">Редактировать</a>
+                                {% endif %}
+                                {% if current_user.role_id == 1 %}
+                                    <button id="delete-btn" value="{{ movie.id }}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteMovie" data-url="{{ url_for('movies.delete', movie_id=movie.id) }}">
+                                        Удалить
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                
             {% endfor %}
         </div>
     </div>
 </div>
+
+<div class="mb-5">
+    {{ render_pagination(pagination, request.endpoint) }}
+</div>
+
+{% if current_user.role_id == 1 %}
+
+<div class="text-center">
+    <a href="{{ url_for('movies.new')}}" type="button" class="btn btn-primary mt-3 mx-auto">
+        Добавить фильм
+    </a>
+</div>
+
+{% endif %}
+
+<div class="modal fade" id="deleteMovie" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Удаление фильма</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить фильм "<span id="movie_name"></span>" ?</p> 
+                <form method="POST" action="" class="d-none">
+                    <input type="submit" class="d-none" id="deletion">                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <label for="deletion" type="button" class="btn btn-danger">Удалить</label>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock %}

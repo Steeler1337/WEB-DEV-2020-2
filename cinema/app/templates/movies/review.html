@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <form class="w-100" method="POST" action="{{ url_for('movies.review', movie_id=movie.id) }}">
+        <div class="form-group">
+            <label for="rating">Оцените данный курс:</label>
+            <select class="form-control" data-live-search="true" name="rating" id="rating">
+                <option value="5" selected >Отлично</option>
+                <option value="4">Хорошо</option>
+                <option value="3">Удовлетворительно</option>
+                <option value="2">Неудовлетворительно</option>
+                <option value="1">Плохо</option>
+                <option value="0">Ужасно</option>
+            </select>
+        </div>
+
+        <input type="text" hidden name="movie_id" value="{{ movie.id }}">
+        <input type="text" hidden name="user_id" value="{{ current_user.id }}">
+
+        
+        
+        <div class="form-group">
+            <label for="text-content">Введите текст в формате Markdown</label>
+            <textarea class="form-control" name="text" id="text-content" cols="30" rows="10"></textarea>
+        </div>
+        <div class="form-group text-center">
+            <input class="btn btn-primary" type="submit" value="Сохранить">
+        </div>
+
+    </form>
+</div>
+{% endblock %}

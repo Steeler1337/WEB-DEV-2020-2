@@ -27,6 +27,10 @@ class Movie(db.Model):
     def __repr__(self):
         return '<Movie %r>' % self.name
 
+    @property
+    def html(self):
+        return markdown.markdown(self.description)
+
 
 class Genre(db.Model):
     __tablename__ = 'genres'
@@ -57,7 +61,7 @@ class Poster(db.Model):
 
     @property
     def url(self):
-        return url_for('poster', poster_id=self.id)
+        return url_for('image', poster_id=self.id)
 
     @property
     def storage_filename(self):
@@ -75,6 +79,12 @@ class Review(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=sa.sql.func.now())
 
     user = db.relationship('User')
+
+    @property
+    def html(self):
+        return markdown.markdown(self.text)
+
+   
     
 
 

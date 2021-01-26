@@ -14,6 +14,8 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
 
     <title>Онлайн-Кинотеатр</title>
 </head>
@@ -24,21 +26,31 @@
         <header class="fixed-top">
             <nav class="navbar navbar-dark bg-dark">
                 <div class="container">
-                    <div class="logo navbar-brand">
-                        <a href="{{ url_for('index') }}">
-                            <img class="img-fluid" src="{{ url_for('static', filename='images/popcorn.png') }}" alt="cinema-logo" width="50px">
-                        </a>
-                    </div>
-                   <!--  if current_user.is_authenticated 
-                        <div class="profile" title=" current_user.first_name   current_user.last_name " >
-                            <p> current_user.first_name  current_user.last_name </p>
-                            <img class="img-fluid rounded-circle cursor-pointer"
-                                src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
-                            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a>
-                        </div>-->
-                    <!-- else -->
-                        <a class="btn btn-lg btn-outline-light" href="{{ url_for('auth.login') }}">Войти</a>
-                    <!-- endif -->
+                        <div class="logo navbar-brand">
+                            <a href="{{ url_for('index') }}">
+                                <img class="img-fluid" src="{{ url_for('static', filename='images/popcorn.png') }}" alt="cinema-logo" width="50px">
+                            </a>
+                        </div>
+                        <div class="nav-item name-logo">
+                            {{ current_user.first_name }} {{ current_user.last_name }}
+                        </div>
+                        <div class="nav-item">
+                        {% if current_user.is_authenticated %}
+                            <div class="dropdown">
+                                <div class="profile" title="{{ current_user.login }}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img class="img-fluid rounded-circle cursor-pointer"
+                                        src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Мои подборки</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <a class="btn btn-lg btn-outline-light" href="{{ url_for('auth.login') }}">Войти</a>
+                        {% endif %}
+                        </div>
                 </div>
             </nav>
         </header>

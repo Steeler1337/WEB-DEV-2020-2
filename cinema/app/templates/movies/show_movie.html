@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="title-area text-center py-5 d-flex" style="background-image: url({{ movie.poster.url }});">
+    <div class="m-auto">
+        <h1 class="title mb-3 font-weight-bold">{{ movie.name }}</h1>
+        <p class="mb-3 mx-auto">
+            {{ movie.year }}</span>
+        </p>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <section class="about mb-5">
+        <h2 class="mb-3 text-center text-uppercase font-weight-bold">О фильме</h2>
+        <p>{{ movie.html | safe }}</p>
+    </section>
+
+    <hr>
+
+    <h4 class="mb-3 text-center text-uppercase font-weight-bold">Рецензии</h4>
+
+
+    {% if current_user.is_authenticated %}
+        {% if checker %}
+            <h4>Спасибо, что оставили рецензию!</h4>
+        {% else %}
+        <div class="text-center">
+            <a href="{{ url_for('movies.review_generator', movie_id=movie.id)}}" type="button" class="btn btn-primary mt-3 mx-auto">
+                Оставить рецензию
+            </a>
+        </div>
+        {% endif %}
+    {% else %}
+    <h3>Войдите в систему, чтобы оставлять рецензии.</h3>
+    {% endif %}
+
+    {% for review in reviews %}
+        <div class="media-block mt-5">
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <div class="profile">
+                        <img width='100' class="rounded-circle cursor-pointer ml-5"
+                        src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" alt="profile-pic">
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="media-body">
+                        <div class="row">
+                            <p class="btn-link text-semibold media-heading box-inline"> 
+                                {{review.user.full_name}}
+                            </p>
+                            <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg">{{ review.created_at }}</i></p>
+                        </div>
+                        <div class="row">
+                            <p class="text-muted text-sm"><b class="fa fa-mobile fa-lg">Оценка: {{ review.rating }}</b></p>
+                        </div>
+                        <p class="review" name="text">{{ review.html | safe }}</p>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    {% endfor %}
+
+
+</div>
+
+{% endblock %}

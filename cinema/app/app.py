@@ -1,8 +1,9 @@
 import os
-from flask import Flask, render_template, abort, send_from_directory
+from flask import Flask, render_template, abort, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_migrate import Migrate
+from flask_login import current_user, login_required
 
 app = Flask(__name__)
 application = app
@@ -23,19 +24,28 @@ migrate = Migrate(app, db)
 from models import Poster, Movie, Review, Genre
 
 from auth import bp as auth_bp, init_login_manager
-from api import bp as api_bp
+#from api import bp as api_bp
 from movies import bp as movies_bp
 
 init_login_manager(app)
 
 app.register_blueprint(auth_bp)
-app.register_blueprint(api_bp)
+#app.register_blueprint(api_bp)
 app.register_blueprint(movies_bp)
+
+
+
+PER_PAGE = 10
 
 @app.route('/')
 def index():
-    movies = Movie.query.all()
-    return render_template('index.html', movies=movies)
+    page = request.args.get('page', 1, type=int)
+    movies = Movie.query.order_by(Movie.year.desc())
+    pagination = movies.paginate(page, PER_PAGE)
+    movies = pagination.items
+    
+
+    return render_template('index.html', movies=movies, pagination=pagination)
 
 @app.route('/images/<poster_id>')
 def image(poster_id):
