@@ -23,7 +23,7 @@ migrate = Migrate(app, db)
 
 from models import Poster, Movie, Review, Genre
 
-from auth import bp as auth_bp, init_login_manager
+from auth import bp as auth_bp, init_login_manager, check_rights
 #from api import bp as api_bp
 from movies import bp as movies_bp
 

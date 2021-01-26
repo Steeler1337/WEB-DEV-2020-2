@@ -6,9 +6,9 @@ $('#deleteMovie').on('show.bs.modal', function (event) {
     let url = event.relatedTarget.dataset.url;
     form.action = url;
     
-    //let movieName = event.relatedTarget.closest('.title').querySelector('p').textContent;
-    //document.getElementById('movie_name').textContent = movieName;
-    alert(form.action);
+    let movieName = event.relatedTarget.querySelector('.title').textContent; 
+    this.querySelector('#movie_name').textContent = movieName;
+
 });
 
 
@@ -89,12 +89,8 @@ window.onload = function() {
             imageUploadFunction: imageUploadFunction
         });
     }
-    // let counter = document.getElementById('add').length;
-    // alert(counter)
-    // document.getElementById('counter').textContent = counter;
+   
 
-    let x = document.getElementsByClassName("add")
-    alert(x.length)
-    document.getElementById("counter").innerHTML = x.length;
+    
 }
 

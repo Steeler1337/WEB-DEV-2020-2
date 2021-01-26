@@ -1,7 +1,8 @@
-from flask_login import current_user # нужно, чтобы работать с понятием "текущий аутентифицированный пользователь"
+from flask_login import current_user 
 
 ADMIN_ROLE_ID = 1
 MODERATOR_ROLE_ID = 2
+DEFAULT_ROLE_ID = 3
 
 
 def is_admin():
@@ -10,17 +11,15 @@ def is_admin():
 def is_moderator():
     return current_user.role_id == MODERATOR_ROLE_ID
 
-class UsersPolicy: # класс, имеющий набор методов, которые возвращают true или false в зависимости от прав пользователя.
-    def __init__(self, record=None): # т.к. создание записи не требует сведений о конкретной записи, а редакт, просмотр и удаление - да, то делаем необязательный аргумент "record". 
-        self.record = record # сохраняем эту запись в качестве атрибута для объекта класса UsersPolicy
+def is_default_user():
+    return current_user.role_id == DEFAULT_ROLE_ID
+
+class UsersPolicy: 
+    def __init__(self, role_id): 
+        self.role_id = role_id
 
     def edit(self):
-        is_editing_user = current_user.id == self.record.id
-        return is_admin() or is_editing_user
-
-    def show(self):
-        is_showing_user = current_user.id == self.record.id
-        return is_admin() or is_showing_user
+        return is_admin() or is_moderator()
 
     def new(self):
         return is_admin()

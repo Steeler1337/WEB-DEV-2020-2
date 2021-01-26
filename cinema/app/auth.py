@@ -1,6 +1,8 @@
+from functools import wraps
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import User
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -16,6 +18,8 @@ def init_login_manager(app):
 def load_user(user_id):
     user = User.query.get(user_id)
     return user
+
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -37,3 +41,25 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+def load_movie(movie_id):
+    if user_id is None:
+        return None
+    cursor =  mysql.connection.cursor(named_tuple=True)
+    cursor.execute('SELECT * FROM users WHERE id = %s;', (user_id,))
+    record = cursor.fetchone()
+    cursor.close()
+    return record
+
+
+def check_rights(action):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not current_user.can(action, current_user.role_id):
+                flash('У вас недостаточно прав для доступа к данной странице', 'danger')
+                return redirect(url_for('index'))
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator

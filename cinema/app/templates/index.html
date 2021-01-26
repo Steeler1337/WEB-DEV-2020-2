@@ -25,13 +25,8 @@
                                 </div>
                                 <p class="movie-name">
                                     
-                                    Количество рецензий: <span id="counter">0</span>
-                                    {% for review in movie.review %}
-                                        {% if movie.id == movie.review.movie_id %}
-                                            <input type="hidden" class="add">
-                                            да 
-                                        {% endif %}
-                                    {% endfor %}
+                                    Количество рецензий: {{ movie.review | length }}
+                                    
                                     
                                 </p>                                
                             </div>
@@ -86,7 +81,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <label for="deletion" type="button" class="btn btn-danger">Удалить</label>
+                <label for="deletion" type="button" class="btn btn-danger mb-0">Удалить</label>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
             </div>
         </div>

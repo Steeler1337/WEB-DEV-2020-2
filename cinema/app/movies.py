@@ -9,10 +9,10 @@ from app import db
 
 bp = Blueprint('movies', __name__, url_prefix='/movies')
 
+from app import check_rights
 
 PARAMS_OF_MOVIE = ['name', 'year', 'country', 'producer', 'screenwriter', 'duration', 'description', 'actors']
 PARAMS_OF_REVIEW = ['rating', 'text', 'movie_id', 'user_id']
-
 
 
 def params():
@@ -22,6 +22,7 @@ def review_params():
     return { p: request.form.get(p) for p in PARAMS_OF_REVIEW }
 
 @bp.route('/new')
+@check_rights('new')
 @login_required
 def new():
     genres = Genre.query.all()
@@ -29,6 +30,7 @@ def new():
 
 
 @bp.route('/create', methods=['POST'])
+@check_rights('new')
 @login_required
 def create():
     f = request.files.get('background_img') 
@@ -78,20 +80,28 @@ def show(movie_id):
 @bp.route('/review/<int:movie_id>', methods=['POST'])
 @login_required
 def review(movie_id):
+    
     review = Review(**review_params())
     db.session.add(review)
     db.session.commit()
     flash('Ваша рецензия успешно сохранена!', 'success')
     return redirect(url_for("movies.show", movie_id=movie_id))
 
-@bp.route('/movies/<int:movie_id>/review')
+@bp.route('/<int:movie_id>/review')
 @login_required
 def review_generator(movie_id):
+    reviews = Review.query.filter( Review.movie_id == movie_id )
+    for review in reviews:
+        if current_user.id == review.user_id:
+            flash('Вы уже оставили рецензию.', 'warning')
+            return redirect(url_for("movies.show", movie_id=movie_id))
+
     movie=Movie.query.get(movie_id)
     return render_template('movies/review.html', movie=movie)
 
 
-@bp.route('/movies/<int:movie_id>/edit')
+@bp.route('/<int:movie_id>/edit')
+@check_rights('edit')
 @login_required
 def edit(movie_id):   
     movie = Movie.query.get(movie_id)
@@ -100,7 +110,8 @@ def edit(movie_id):
     return render_template('movies/edit.html', movie=movie, genres=genres, movie_genres=movie_genres)
     
 
-@bp.route('/movies/<int:movie_id>/update', methods=['POST'])
+@bp.route('/<int:movie_id>/update', methods=['POST'])
+@check_rights('edit')
 @login_required
 def update(movie_id):
     movie = Movie.query.get(movie_id)
@@ -171,7 +182,8 @@ def update(movie_id):
     return redirect(url_for('index'))
 
 
-@bp.route('/delete/<int:movie_id>', methods=['POST'])
+@bp.route('/<int:movie_id>/delete', methods=['POST'])
+@check_rights('delete')
 @login_required
 def delete(movie_id):
     movie_genres = Movie_genre.query.filter(Movie_genre.movie_id == movie_id)

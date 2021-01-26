@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import markdown
 from app import db
+from users_policy import UsersPolicy
 
 
 class Movie(db.Model):
@@ -113,6 +114,13 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def can(self, action, role_id):
+        policy =  UsersPolicy(role_id)
+        method = getattr(policy, action, None)
+        if method:
+            return method()
+        return False
 
 
 class Role(db.Model):
