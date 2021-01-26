@@ -42,6 +42,7 @@ def create():
         flash('Введены некорректные данные или не все поля заполнены. Ошибка сохранения', 'danger')
         return redirect(url_for('movies.new'))
     
+    
     movie = Movie(**params(), poster_id=img.id)
     try:
         db.session.add(movie)
@@ -55,6 +56,7 @@ def create():
         movie_genres = Movie_genre(movie_id=movie.id, genre_id=genre)
         db.session.add(movie_genres)
         db.session.commit()
+
 
     if img:
         img_saver.bind_to_object(movie)

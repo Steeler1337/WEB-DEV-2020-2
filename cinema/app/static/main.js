@@ -1,13 +1,19 @@
 $('#deleteMovie').on('show.bs.modal', function (event) {
+    let movieName=""
     let form = this.querySelector('form');
     let button_deletion = document.getElementById('delete-btn');
-    movie_id = button_deletion.value;
     
+    movieName = button_deletion.value
+    alert(movieName)
+
+
+
+    this.querySelector('#movie_name').textContent = movieName;
+
     let url = event.relatedTarget.dataset.url;
     form.action = url;
     
-    let movieName = event.relatedTarget.querySelector('.title').textContent; 
-    this.querySelector('#movie_name').textContent = movieName;
+    
 
 });
 

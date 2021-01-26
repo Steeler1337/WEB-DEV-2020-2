@@ -1,5 +1,10 @@
 body {
-    background-color: rgb(185, 185, 185);
+    background-color: rgb(155, 129, 185);
+}
+
+.btn-smotr {
+    background-color: black;
+    color: white;
 }
 
 .logo {
@@ -12,6 +17,7 @@ body {
 
 .navbar {
     height: 80px;
+    background-color: black;
 }
 
 .name-logo {
@@ -52,6 +58,7 @@ body {
 
 .footer {
     height: 100px;
+    background-color: black;
 }
 
 .course {
@@ -191,6 +198,11 @@ body {
 
 .steps .active {
     background-color: green;
+}
+
+.active {
+    background-color: white;
+    color: black;
 }
 
 .cursor-pointer {

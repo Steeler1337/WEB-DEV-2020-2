@@ -4,8 +4,8 @@
 {% block content %}
 <div class="title-area text-center py-5 d-flex" style="background-image: url({{ movie.poster.url }});">
     <div class="m-auto">
-        <h1 class="title mb-3 font-weight-bold">{{ movie.name }}</h1>
-        <p class="mb-3 mx-auto">
+        <h1 class="title mb-3 font-weight-bold movie-name">{{ movie.name }}</h1>
+        <p class="mb-3 mx-auto movie-name">
             {{ movie.year }}</span>
         </p>
     </div>
@@ -15,6 +15,18 @@
     <section class="about mb-5">
         <h2 class="mb-3 text-center text-uppercase font-weight-bold">О фильме</h2>
         <p>{{ movie.html | safe }}</p>
+    </section>
+    <section class="about mb-5">
+        <h5 class="mb-3 text-uppercase font-weight-bold">В ролях</h5>
+        <p>{{ movie.actors }}</p>
+    </section>
+    <section class="about mb-5">
+        <h5 class="mb-3 text-uppercase font-weight-bold">Режиссёр</h5>
+        <p>{{ movie.producer }}</p>
+    </section>
+    <section class="about mb-5">
+        <h5 class="mb-3 text-uppercase font-weight-bold">Продолжительность</h5>
+        <p>{{ movie.duration }} мин.</p>
     </section>
 
     <hr>
@@ -27,7 +39,7 @@
             <h4>Спасибо, что оставили рецензию!</h4>
         {% else %}
         <div class="text-center">
-            <a href="{{ url_for('movies.review_generator', movie_id=movie.id)}}" type="button" class="btn btn-primary mt-3 mx-auto">
+            <a href="{{ url_for('movies.review_generator', movie_id=movie.id)}}" type="button" class="btn btn-smotr mt-3 mx-auto">
                 Оставить рецензию
             </a>
         </div>
