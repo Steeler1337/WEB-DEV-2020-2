@@ -7,6 +7,12 @@ import markdown
 from app import db
 from users_policy import UsersPolicy
 
+class Complitation_user(db.Model):
+    __tablename__ = "complitation_users"
+    comp_id = db.Column(db.Integer, db.ForeignKey('complitations.id'), primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True) 
+
 
 class Movie(db.Model):
     __tablename__ = 'movies'
@@ -24,6 +30,7 @@ class Movie(db.Model):
     poster = db.relationship('Poster')
     review = db.relationship('Review', backref='movie')
     movie_genre = db.relationship('Movie_genre', backref='movie')
+    complitation_user = db.relationship('Complitation_user', backref='movie')
 
     def __repr__(self):
         return '<Movie %r>' % self.name
@@ -101,6 +108,7 @@ class User(db.Model, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     role = db.relationship('Role')
+    complitation_user = db.relationship('Complitation_user', backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.login
@@ -134,4 +142,16 @@ class Role(db.Model):
 
 
 
+class Complitation(db.Model):
+    __tablename__ = 'complitations'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+
+    complitation_user = db.relationship('Complitation_user', backref='complitation')
+
+
+
+    
+
+    
 

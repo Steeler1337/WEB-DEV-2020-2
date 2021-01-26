@@ -1,21 +1,18 @@
 $('#deleteMovie').on('show.bs.modal', function (event) {
-    let movieName=""
-    let form = this.querySelector('form');
-    let button_deletion = document.getElementById('delete-btn');
     
-    movieName = button_deletion.value
-    alert(movieName)
-
-
-
+    let url = event.relatedTarget.dataset.url;
+    let form = this.querySelector('form');
+    form.action = url;
+    let movieName = event.relatedTarget.closest('div').querySelector('.btn').value; //div - ближайший род. тег, .btn - класс кнопки, на которую нажимал
+    
     this.querySelector('#movie_name').textContent = movieName;
 
-    let url = event.relatedTarget.dataset.url;
-    form.action = url;
+    
     
     
 
 });
+
 
 
 

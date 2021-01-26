@@ -11,7 +11,7 @@
             {% for movie in movies %}
                     <div class="col-md-6 mx-auto">
                         <div class="row">
-                            <div class="course" style="background-image: url({{ url_for('image', poster_id=movie.poster_id) }});">
+                            <div class="name course" style="background-image: url({{ url_for('image', poster_id=movie.poster_id) }});">
                                 <p class="title movie-name">{{ movie.name }}</p>
                                 <p class="movie-name">
                                     <span>
@@ -23,11 +23,8 @@
                                 <div class="rating movie-name">
                                     <span>{{ movie.year }}</span>
                                 </div>
-                                <p class="movie-name">
-                                    
+                                <p class="movie-name">             
                                     Количество рецензий: {{ movie.review | length }}
-                                    
-                                    
                                 </p>                                
                             </div>
                         </div>
@@ -38,9 +35,11 @@
                                     <a class="btn btn-secondary" href="{{ url_for('movies.edit', movie_id=movie.id)}}">Редактировать</a>
                                 {% endif %}
                                 {% if current_user.role_id == 1 %}
+                                <div>
                                     <button id="delete-btn" value="{{ movie.name }}" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteMovie" data-url="{{ url_for('movies.delete', movie_id=movie.id) }}">
                                         Удалить
                                     </button>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
