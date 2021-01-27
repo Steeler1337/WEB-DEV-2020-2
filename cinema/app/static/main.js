@@ -6,11 +6,6 @@ $('#deleteMovie').on('show.bs.modal', function (event) {
     let movieName = event.relatedTarget.closest('div').querySelector('.btn').value; //div - ближайший род. тег, .btn - класс кнопки, на которую нажимал
     
     this.querySelector('#movie_name').textContent = movieName;
-
-    
-    
-    
-
 });
 
 

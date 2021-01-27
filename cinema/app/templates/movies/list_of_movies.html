@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4 pt-5 text-center text-uppercase font-weight-bold">Подборка "{{ comp.name }}"</h2>
+<div class="row no-gutters">
+            {% for complitation_movie in complitation_movies %}
+                    <div class="col-md-6 mx-auto">
+                        <div class="row">
+                            <div class="course mt-4" style="background-image: url({{ url_for('image', poster_id=complitation_movie.movie.poster_id) }});">
+                                <p class="title movie-name">{{ complitation_movie.movie.name }}</p>
+                                <p class="movie-name">
+                                    <span>
+                                        {% for movie_genre in complitation_movie.movie.movie_genre %}
+                                            {{ movie_genre.genre.name }}
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                                <div class="rating movie-name">
+                                    <span>{{ complitation_movie.movie.year }}</span>
+                                </div>
+                                <p class="movie-name">             
+                                    Количество рецензий: {{ complitation_movie.movie.review | length }}
+                                </p>                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="btn-group mt-1 mb-3 mx-auto">
+                                <a class="btn btn-smotr" href="{{ url_for('movies.show', movie_id=complitation_movie.movie.id )}}">Просмотр</a>
+                            </div>
+                        </div>
+                    </div>
+                
+            {% endfor %}
+        </div>
+{% endblock%}

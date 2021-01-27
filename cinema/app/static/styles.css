@@ -217,9 +217,6 @@ body {
     overflow: hidden;
 }
 
-.review {
-    font-size: 23px;
-}
 
 .movie-name {
     text-shadow: 2px 0 1px #000,
@@ -227,6 +224,17 @@ body {
     -1px 0 1px #000, 
     0 -1px 1px #000;
 }
+
+.add_comp {
+    background-color: white;
+    color: black;
+}
+
+.comments-name {
+    color: black;
+}
+
+
 
 @media (max-width: 768px) {
     .title-area .description {

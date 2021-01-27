@@ -2,8 +2,8 @@ import os
 import bleach
 from flask import Blueprint, render_template, redirect, url_for, request, current_app, flash
 from flask_login import login_required, current_user
-from tools import Navigator, ImageSaver
-from models import Genre, Movie, Review, Movie_genre
+from tools import ImageSaver
+from models import Genre, Movie, Review, Movie_genre, Complitation, Complitation_movie
 
 from app import db
 
@@ -75,8 +75,8 @@ def show(movie_id):
         for review in reviews:
             if review.user_id == current_user.id:
                 checker = True
-    
-    return render_template('movies/show_movie.html', movie=movie, reviews=reviews, checker=checker)
+    complitations = Complitation.query.filter( Complitation.user_id == current_user.id)
+    return render_template('movies/show_movie.html', movie=movie, reviews=reviews, checker=checker, complitations=complitations)
 
 
 @bp.route('/review/<int:movie_id>', methods=['POST'])
@@ -196,3 +196,52 @@ def delete(movie_id):
     db.session.commit()
     flash('Запись была успешно удалена!', 'success')
     return redirect(url_for('index'))
+
+@bp.route('/user/<int:user_id>/complitations_list')
+@login_required
+def complitations_list(user_id):   
+    complitations = Complitation.query.filter( Complitation.user_id == user_id)
+    return render_template('movies/complitations_list.html', complitations=complitations, user_id=user_id)
+
+@bp.route('/list_of_movies/<int:complitation_id>')
+@login_required
+def list_of_movies(complitation_id):
+    movies = Movie.query.all()   
+    complitation_movies = Complitation_movie.query.filter(Complitation_movie.comp_id == complitation_id)
+    comp=Complitation.query.get(complitation_id)
+    return render_template('movies/list_of_movies.html', complitation_movies=complitation_movies, movies=movies, comp=comp)
+
+
+@bp.route('/user/<int:user_id>/new_comp', methods=['POST'])
+@login_required
+def new_comp(user_id):
+    name=request.form.get('comp_name')
+    comp=Complitation(name=name,
+    user_id=user_id)
+    try:
+        db.session.add(comp)
+        db.session.commit()
+    except:
+        flash('Возникла ошибка, повторите позже.', 'danger')
+    flash(f'Подборка "{name}" была успешно добавлена!', 'success')
+    return redirect(url_for('movies.complitations_list', user_id=user_id))
+
+@bp.route('/add_to_comp/<int:movie_id>', methods=['POST'])
+@login_required
+def add_to_comp(movie_id):
+    movie = Movie.query.get(movie_id)
+    movie_name = movie.name
+    comp_id = request.form.get('complitations')
+    print(comp_id)
+    comp = Complitation.query.get(comp_id)
+    comp_name = comp.name
+    comp_movies=Complitation_movie(comp_id=comp_id,
+    movie_id=movie_id)
+    try:
+        db.session.add(comp_movies)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        flash('Возникла ошибка, повторите позже.', 'danger')
+    flash(f'Фильм "{movie_name}" был успешно добавлена в подборку "{comp_name}" !', 'success')
+    return redirect(url_for('movies.show', movie_id=movie_id))

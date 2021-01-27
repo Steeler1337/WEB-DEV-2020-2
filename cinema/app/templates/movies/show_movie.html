@@ -8,6 +8,9 @@
         <p class="mb-3 mx-auto movie-name">
             {{ movie.year }}</span>
         </p>
+        <button type="button" class="btn add_comp" data-toggle="modal" data-target="#addToComp">
+            Добавить в подборку
+        </button>
     </div>
 </div>
 
@@ -28,6 +31,8 @@
         <h5 class="mb-3 text-uppercase font-weight-bold">Продолжительность</h5>
         <p>{{ movie.duration }} мин.</p>
     </section>
+
+    
 
     <hr>
 
@@ -60,22 +65,53 @@
                 <div class="col-md-10">
                     <div class="media-body">
                         <div class="row">
-                            <p class="btn-link text-semibold media-heading box-inline"> 
+                            <p class="btn-link text-semibold media-heading box-inline comments-name"> 
                                 {{review.user.full_name}}
                             </p>
-                            <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg">{{ review.created_at }}</i></p>
+                            <p class="text-muted ml-4"><i class="fa fa-mobile fa-lg comments-name">{{ review.created_at }}</i></p>
                         </div>
                         <div class="row">
-                            <p class="text-muted text-sm"><b class="fa fa-mobile fa-lg">Оценка: {{ review.rating }}</b></p>
+                            <p class="text-muted text-sm"><b class="fa fa-mobile fa-lg comments-name">Оценка: {{ review.rating }}</b></p>
                         </div>
-                        <p class="review" name="text">{{ review.html | safe }}</p>
+                        <p name="text">{{ review.html | safe }}</p>
                     </div>
                 </div>  
             </div>
         </div>
+
+        <hr>
     {% endfor %}
-
-
 </div>
 
+
+
+
+
+<div id="addToComp" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить в подборку</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('movies.add_to_comp', movie_id=movie.id) }}">
+                    <label for="complitations">Название подборки</label>
+                    <select class="form-control" data-live-search="true" name="complitations" id="complitations">
+                        {% for complitation in complitations %}
+                            <option value="{{ complitation.id }}" >{{ complitation.name }} </option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" class="d-none" id="addCompSubmit">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <label for="addCompSubmit" class="btn btn-smotr mb-0">Добавить</label>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
